@@ -1,0 +1,28 @@
+{
+  "name": "@orq/superagent",
+  "version": "0.1.0",
+  "description": "Super agent request utility",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kriegslustig/orq-superagent.git"
+  },
+  "keywords": [
+    "oqr",
+    "Observable",
+    "RxJS",
+    "Observable",
+    "Request",
+    "Queue",
+    "superagent"
+  ],
+  "author": "Luca Nils Schmid <luca.schmid@vimcar.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kriegslustig/orq-superagent/issues"
+  },
+  "homepage": "https://github.com/Kriegslustig/orq-superagent#readme"
+}
