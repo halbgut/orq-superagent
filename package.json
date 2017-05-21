@@ -7,7 +7,7 @@
     "test": "ava",
     "test:watch": "ava --watch",
     "build": "npm run build:babel && npm run build:flow",
-    "build:babel": "babel src --ignore __tests__ -d .",
+    "build:babel": "babel src --ignore __tests__ -d dist",
     "build:watch": "chokidar src -c 'npm run build:babel'",
     "build:flow": "flow gen-flow-files src/index.js > dist/index.flow.js",
     "prepublish": "npm run build",
