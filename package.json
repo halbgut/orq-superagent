@@ -1,7 +1,7 @@
 {
   "name": "@orq/superagent",
   "version": "0.1.0",
-  "description": "Super agent request utility",
+  "description": "Super agent request utility for orq",
   "main": "dist/index.js",
   "scripts": {
     "test": "ava",
