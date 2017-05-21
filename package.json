@@ -2,9 +2,19 @@
   "name": "@orq/superagent",
   "version": "0.1.0",
   "description": "Super agent request utility",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "test:watch": "ava --watch",
+    "build": "npm run build:babel && npm run build:flow",
+    "build:babel": "babel src --ignore __tests__ -d .",
+    "build:watch": "chokidar src -c 'npm run build:babel'",
+    "build:flow": "flow gen-flow-files src/index.js > dist/index.flow.js",
+    "prepublish": "npm run build",
+    "flow": "flow",
+    "flow:watch": "chokidar src -c 'flow'",
+    "flow-typed": "flow-typed",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -14,9 +24,7 @@
     "oqr",
     "Observable",
     "RxJS",
-    "Observable",
-    "Request",
-    "Queue",
+    "Observable Request Queue",
     "superagent"
   ],
   "author": "Luca Nils Schmid <luca.schmid@vimcar.com>",
@@ -24,5 +32,30 @@
   "bugs": {
     "url": "https://github.com/Kriegslustig/orq-superagent/issues"
   },
-  "homepage": "https://github.com/Kriegslustig/orq-superagent#readme"
+  "homepage": "https://github.com/Kriegslustig/orq-superagent#readme",
+  "ava": {
+    "files": [
+      "src/**/__tests__/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
+  },
+  "devDependencies": {
+    "@ava/babel-preset-stage-4": "^1.0.0",
+    "ava": "^0.19.1",
+    "babel-cli": "^6.24.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-register": "^6.24.1",
+    "chokidar-cli": "^1.2.0",
+    "dom-event-target": "^1.0.0",
+    "flow-bin": "^0.46.0",
+    "flow-typed": "^2.1.2",
+    "standard-version": "^4.0.0"
+  },
+  "dependencies": {
+    "rxjs": "^5.4.0",
+    "superagent": "^3.5.2"
+  }
 }
