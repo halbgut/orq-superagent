@@ -33,7 +33,7 @@ const request = (url: string, options: ?RequestOptions):
     })
 
 const getResponseProps = res => {
-  const body = Object.keys(res.body).length
+  const body = res.body && Object.keys(res.body).length
     ? res.body
     : res.text
   return {
