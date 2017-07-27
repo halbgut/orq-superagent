@@ -21,7 +21,7 @@ const request = (url: string, options: ?RequestOptions):
       if (headers) request.set(headers)
       if (body) request.send(body)
       request.end((err, res) => {
-        if (err) return o.error(new HttpRequestError(res))
+        if (err || !res) return o.error(new HttpRequestError(res))
         o.next(getResponseProps(res))
         o.complete()
       })
