@@ -49,7 +49,9 @@ const getResponseProps = res => {
 
 function HttpRequestError(res) {
   this.message = 'HTTP request failed.'
-  this.response = getResponseProps(res)
+  this.response = res
+    ? getResponseProps(res)
+    : null
 }
 
 (HttpRequestError: any).prototype = Error.prototype

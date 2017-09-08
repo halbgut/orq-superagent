@@ -60,6 +60,15 @@ describe('request', () => {
     expect(typeof param.message).toBe('string')
   })
 
+  it('should simply return no response if there is an error and no response', () => {
+    const { superagent } = superagentMock([ true, null ])
+    const errorHandler = jest.fn()
+
+    request(url, {}, superagent).subscribe(null, errorHandler)
+
+    expect(errorHandler).toBeCalled()
+  })
+
   it('should cancel the request if the observable is unsubscribed from', () => {
     const { superagent, abort, end } = superagentMock()
     end.mockImplementation(() => {})
