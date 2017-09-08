@@ -1,6 +1,4 @@
 import { Observable as O } from 'rxjs'
-import nock from 'nock'
-
 import request from '../'
 
 const url = 'https://example.com'
