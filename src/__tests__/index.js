@@ -1,6 +1,7 @@
 import { Observable as O } from 'rxjs'
 import test from 'ava'
 import nock from 'nock'
+import sinon from 'sinon'
 
 import request from '../'
 
@@ -98,4 +99,15 @@ test('request should send the specified body along with the request', t => {
     .reply(200, 'TROLOLO')
   return request(url, { method: 'POST', body: { x: true } })
     .do((res) => { t.is(res.body, 'TROLOLO') })
+})
+
+test('request should use passed instance of superagent', t => {
+  const superagent = sinon.stub()
+  superagent.returns({
+    send: sinon.stub(),
+    end: sinon.stub(),
+    set: sinon.stub(),
+  })
+  request('https://example.com', {}, superagent).subscribe()
+  t.true(superagent.called)
 })

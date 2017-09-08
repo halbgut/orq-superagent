@@ -13,11 +13,15 @@ const defaults = {
   method: 'GET',
 }
 
-const request = (url: string, options: ?RequestOptions):
+const request = (
+  url: string,
+  options: ?RequestOptions,
+  agent?: typeof superagent = superagent
+):
   rxjs$Observable<any> =>
     O.create(o => {
       const { headers, method, body } = Object.assign({}, defaults, options)
-      const request = superagent(method, url)
+      const request = agent(method, url)
       if (headers) request.set(headers)
       if (body) request.send(body)
       request.end((err, res) => {
