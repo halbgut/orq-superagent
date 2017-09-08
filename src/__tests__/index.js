@@ -3,6 +3,19 @@ import request from '../'
 
 const url = 'https://example.com'
 
+type Response = {
+  body?: any,
+  headers?: { [string]: string },
+  status?: number,
+}
+type SuperagentRequest = {
+  set: () => void,
+  send: () => void,
+  abort: ((err: ?any, Response) => void) => void,
+  end: () => void,
+  response: ?Response,
+}
+
 const superagentMock = (result = [null, {
   body: {},
   status: 200,
@@ -16,7 +29,8 @@ const superagentMock = (result = [null, {
     request.response = result[1]
     cb(...result)
   })
-  const request = { set, send, end, abort }
+  const request: SuperagentRequest =
+    { set, send, end, abort, response: null }
   superagent.mockReturnValue(request)
   return { superagent, set, send, end, abort }
 }
