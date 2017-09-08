@@ -36,16 +36,11 @@ const request = (
       }
     })
 
-const getResponseProps = res => {
-  const body = res.body && Object.keys(res.body).length
-    ? res.body
-    : res.text
-  return {
-    status: res.status,
-    headers: res.headers,
-    body,
-  }
-}
+const getResponseProps = res => ({
+  status: res.status,
+  headers: res.headers,
+  body: res.body || res.text,
+})
 
 function HttpRequestError(res) {
   this.message = 'HTTP request failed.'
