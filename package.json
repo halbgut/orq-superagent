@@ -54,6 +54,7 @@
     "flow-bin": "^0.46.0",
     "flow-typed": "^2.1.2",
     "nock": "^9.0.13",
+    "sinon": "3.2.1",
     "standard-version": "^4.0.0"
   },
   "dependencies": {
