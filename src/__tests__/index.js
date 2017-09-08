@@ -3,118 +3,96 @@ import nock from 'nock'
 
 import request from '../'
 
+const url = 'https://example.com'
+
+const superagentMock = (result = [null, {
+  body: {},
+  status: 200,
+  headers: {},
+}]) => {
+  const superagent = jest.fn()
+  const set = jest.fn()
+  const send = jest.fn()
+  const abort = jest.fn()
+  const end = jest.fn((cb) => {
+    request.response = result[1]
+    cb(...result)
+  })
+  const request = { set, send, end, abort }
+  superagent.mockReturnValue(request)
+  return { superagent, set, send, end, abort }
+}
+
 describe('request', () => {
   it('should make a GET request by default', () => {
-    expect.assertions(3)
-    const url = 'https://1.example.com'
-    nock(url)
-      .get('/')
-      .reply(200, 'YOLO')
-    return request(url)
-      .do(res => {
-        expect(res.status).toBe(200)
-        expect(res.body).toBe('YOLO')
-        expect(typeof res.headers).toBe('object')
-      })
-      .toPromise()
+    const { superagent } = superagentMock()
+    request(url, {}, superagent).subscribe()
+    expect(superagent).toBeCalledWith('GET', url)
   })
 
   it('should send headers', () => {
-    expect.assertions(3)
-    const url = 'https://2.example.com'
-    nock(url, {
-      reqheaders: {
-        'X-Yolo': 'IMMER!',
-      }
-    })
-      .get('/')
-      .reply(200, 'YOLO')
-    return request(url, { headers: { 'X-Yolo': 'IMMER!' } })
-      .do(res => {
-        expect(res.status).toBe(200)
-        expect(res.body).toBe('YOLO')
-        expect(typeof res.headers).toBe('object')
-      })
-      .toPromise()
+    const { superagent, set } = superagentMock()
+    const headers = { a: 'b' }
+    const next = jest.fn()
+
+    request(url, { headers }, superagent).subscribe()
+
+    expect(set).toBeCalledWith(headers)
   })
 
   it('should pass the response headers to the subscriber', () => {
-    expect.assertions(1)
-    const url = 'https://3.example.com'
-    nock(url)
-      .get('/')
-      .reply(200, 'YOLO', { 'X-Yolo': 'Manchmal...' })
-    return request(url)
-      .do(res => {
-        expect(res.headers['x-yolo']).toBe('Manchmal...')
-      })
-      .toPromise()
+    const response = { headers: { a: 'b' } }
+    const { superagent } = superagentMock([ null, response ])
+    const next = jest.fn()
+
+    request(url, {}, superagent).subscribe(next)
+
+    expect(next).toBeCalledWith(response)
   })
 
-  it('should throw if the response status code is non 2xx', () => {
-    expect.assertions(1)
-    const url = 'https://4.example.com'
-    nock(url)
-      .get('/')
-      .reply(500, 'ERROR!')
-    return request(url)
-      .catch(err => {
-        expect(err.response.body).toBe('ERROR!')
-        return O.empty()
-      })
-      .toPromise()
+  it('should throw if the callback is called with an error', () => {
+    const response = { status: 500 }
+    const { superagent } = superagentMock([ true, response ])
+    const errorHandler = jest.fn()
+
+    request(url, {}, superagent).subscribe(null, errorHandler)
+
+    const param = errorHandler.mock.calls[0][0]
+    expect(param.response).toMatchObject(response)
+    expect(typeof param.message).toBe('string')
   })
 
-  // XXX: this test doesn't actually test if the HTTP request is canceled.
-  it('should cancel the request if the observable is unsubscribed from.',
-    done => {
-      const url = 'https://5.example.com'
-      nock(url)
-        .get('/')
-        .delay(100)
-        .reply(200, '123')
-      const sub = request(url)
-        .do((res) => {
-          done.fail()
-        })
-        .subscribe()
-      setTimeout(() => {
-        sub.unsubscribe()
-        done()
-      }, 50)
-    }
-  )
+  it('should cancel the request if the observable is unsubscribed from', () => {
+    const { superagent, abort, end } = superagentMock()
+    end.mockImplementation(() => {})
+    const o$ = request(url, {}, superagent).subscribe()
+
+    o$.unsubscribe()
+
+    expect(abort).toBeCalled()
+  })
 
   it('should use the specified method', () => {
-    expect.assertions(1)
-    const url = 'https://4.example.com'
-    nock(url)
-      .post('/')
-      .reply(200, 'TROLOLO')
-    return request(url, { method: 'POST' })
-      .do((res) => { expect(res.body).toBe('TROLOLO') })
-      .toPromise()
+    const { superagent } = superagentMock()
+    const method = 'POST'
+
+    request(url, { method }, superagent).subscribe()
+
+    expect(superagent).toBeCalledWith(method, url)
   })
 
   it('should send the specified body along with the request', () => {
-    expect.assertions(1)
-    const url = 'https://4.example.com'
-    nock(url)
-      .post('/', { x: true })
-      .reply(200, 'TROLOLO')
-    return request(url, { method: 'POST', body: { x: true } })
-      .do((res) => { expect(res.body).toBe('TROLOLO') })
-      .toPromise()
+    const { superagent, send } = superagentMock()
+    const body = { x: true }
+
+    request(url, { method: 'POST', body }, superagent).subscribe()
+
+    expect(send).toBeCalledWith(body)
   })
 
   it('should should use the passed instance of superagent', () => {
-    const superagent = jest.fn()
-    superagent.mockReturnValue({
-      send: jest.fn(),
-      end: jest.fn(),
-      set: jest.fn(),
-    })
-    request('https://example.com', {}, superagent).subscribe()
+    const { superagent } = superagentMock()
+    request(url, {}, superagent).subscribe()
     expect(superagent).toBeCalled()
   })
 })
