@@ -15,7 +15,8 @@
     "flow": "flow",
     "flow:watch": "chokidar src -c 'flow'",
     "flow-typed": "flow-typed",
-    "release": "standard-version"
+    "release": "standard-version",
+    "ci": "npm i rxjs && npm run test"
   },
   "repository": {
     "type": "git",
@@ -55,7 +56,9 @@
     "standard-version": "^4.0.0"
   },
   "dependencies": {
-    "rxjs": "^5.4.0",
     "superagent": "^3.5.2"
+  },
+  "peerDependency": {
+    "rxjs": "^5.5.2"
   }
 }
