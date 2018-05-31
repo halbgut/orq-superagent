@@ -11,6 +11,7 @@ type Response = {
   status?: number,
 }
 type SuperagentRequest = {
+  redirects: (number) => void,
   set: () => void,
   send: () => void,
   abort: ((err: ?any, Response) => void) => void,
@@ -27,14 +28,15 @@ const superagentMock = (result = [null, {
   const set = jest.fn()
   const send = jest.fn()
   const abort = jest.fn()
+  const redirects = jest.fn()
   const end = jest.fn((cb) => {
     request.response = result[1]
     cb(...result)
   })
   const request: SuperagentRequest =
-    { set, send, end, abort, response: null }
+    { set, send, end, abort, response: null, redirects }
   superagent.mockReturnValue(request)
-  return { superagent, set, send, end, abort }
+  return { superagent, set, send, end, abort, redirects }
 }
 
 describe('request', () => {
@@ -117,5 +119,11 @@ describe('request', () => {
     const { superagent } = superagentMock()
     request(url, {}, superagent).subscribe()
     expect(superagent).toBeCalled()
+  })
+
+  it('should pass redirects to superagent', () => {
+    const { superagent, redirects } = superagentMock()
+    request(url, { redirects: 0 }, superagent).subscribe()
+    expect(redirects).toBeCalledWith(0)
   })
 })

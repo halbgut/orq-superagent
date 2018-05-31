@@ -22,8 +22,10 @@ const request = (
 ):
   rxjs$Observable<any> =>
     O.create(o => {
-      const { headers, method, body } = Object.assign({}, defaults, options)
+      const { headers, method, body, redirects } =
+        Object.assign({}, defaults, options)
       const request = agent(method, url)
+      if (redirects !== undefined) request.redirects(redirects)
       if (headers) request.set(headers)
       if (body) request.send(body)
       request.end((err, res) => {
