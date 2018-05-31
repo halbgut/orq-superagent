@@ -1,3 +1,5 @@
+// @flow
+
 import superagent from 'superagent'
 import { Observable as O } from 'rxjs/Observable'
 

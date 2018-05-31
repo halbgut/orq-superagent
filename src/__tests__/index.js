@@ -1,3 +1,5 @@
+// @flow
+
 import { Observable as O } from 'rxjs'
 import request from '../'
 

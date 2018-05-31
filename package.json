@@ -10,7 +10,7 @@
     "build": "npm run build:babel && npm run build:flow",
     "build:babel": "babel src --ignore __tests__ -d dist",
     "build:watch": "chokidar src -c 'npm run build:babel'",
-    "build:flow": "flow gen-flow-files src/index.js > dist/index.flow.js",
+    "build:flow": "flow-copy-source src dist",
     "prepublish": "npm run build",
     "flow": "flow",
     "flow:watch": "chokidar src -c 'flow'",
@@ -51,6 +51,7 @@
     "babel-register": "^6.24.1",
     "chokidar-cli": "^1.2.0",
     "flow-bin": "^0.73.0",
+    "flow-copy-source": "^1.3.0",
     "flow-typed": "^2.1.2",
     "jest": "21.0.2",
     "standard-version": "^4.0.0"
