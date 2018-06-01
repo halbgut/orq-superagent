@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/Kriegslustig/orq-superagent/compare/v0.4.0...v0.4.1) (2018-06-01)
+
+
+### Bug Fixes
+
+* handle redirects thrown by superagent as next() ([3dec8cc](https://github.com/Kriegslustig/orq-superagent/commit/3dec8cc))
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/Kriegslustig/orq-superagent/compare/v0.2.0...v0.3.0) (2017-11-07)
 
