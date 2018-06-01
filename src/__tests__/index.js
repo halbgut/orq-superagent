@@ -126,4 +126,14 @@ describe('request', () => {
     request(url, { redirects: 0 }, superagent).subscribe()
     expect(redirects).toBeCalledWith(0)
   })
+
+  it('should pass thrown redirects as next values', () => {
+    const response = { status: 302 }
+    const { superagent } = superagentMock([ true, response ])
+    const next = jest.fn()
+
+    request(url, {}, superagent).subscribe(next)
+
+    expect(next).toHaveBeenCalled()
+  })
 })
