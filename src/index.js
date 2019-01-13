@@ -20,7 +20,7 @@ const request = (
   options: ?RequestOptions,
   agent?: typeof superagent = superagent
 ):
-  rxjs$Observable<any> =>
+  O<any> =>
     O.create(o => {
       const { headers, method, body, redirects } =
         Object.assign({}, defaults, options)

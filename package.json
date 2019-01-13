@@ -60,6 +60,6 @@
     "superagent": "^3.5.2"
   },
   "peerDependency": {
-    "rxjs": "^5.5.2"
+    "rxjs": "^5.5.2 || 6"
   }
 }
