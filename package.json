@@ -58,6 +58,6 @@
   },
   "dependencies": {
     "rxjs": "^6.5.3",
-    "superagent": "^5.1.0"
+    "superagent": "^5.0.2"
   }
 }
