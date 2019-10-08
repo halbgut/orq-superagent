@@ -1,7 +1,7 @@
 // @flow
 
 import superagent from 'superagent'
-import { Observable as O } from 'rxjs/Observable'
+import { Observable } from 'rxjs'
 
 type RequestOptions = {
   method?: string,
@@ -9,6 +9,7 @@ type RequestOptions = {
     [string]: string,
   },
   body?: any,
+  withCredentials?: boolean,
 }
 
 const defaults = {
@@ -20,11 +21,12 @@ const request = (
   options: ?RequestOptions,
   agent?: typeof superagent = superagent
 ):
-  O<any> =>
-    O.create(o => {
-      const { headers, method, body, redirects } =
+  Observable<any> =>
+    Observable.create(o => {
+      const { headers, method, body, redirects, withCredentials } =
         Object.assign({}, defaults, options)
       const request = agent(method, url)
+      if (withCredentials) request.withCredentials()
       if (redirects !== undefined) request.redirects(redirects)
       if (headers) request.set(headers)
       if (body) request.send(body)
